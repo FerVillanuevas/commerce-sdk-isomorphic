@@ -68,32 +68,7 @@ export const createCodeVerifier = (): string => nanoid();
 export const generateCodeChallenge = async (
   codeVerifier: string
 ): Promise<string> => {
-  const urlSafe = (input: string) =>
-    input.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-
-  let challenge = '';
-  // Cannot easily test browser functions. Integration test runs in the jsdom test environment which can only mimic certain browser functionality
-  // The window.crypto check is to see if code is being executed in the jsdom test environment or an actual browser to allow our test to successfully run
-  /* istanbul ignore next */
-  if (isBrowser && window.crypto) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(codeVerifier);
-    const digest = await window.crypto.subtle.digest('SHA-256', data);
-    const base64Digest = btoa(String.fromCharCode(...new Uint8Array(digest)));
-    challenge = urlSafe(base64Digest);
-  } else {
-    const crypto = await import('crypto');
-    challenge = urlSafe(
-      crypto.default.createHash('sha256').update(codeVerifier).digest('base64')
-    );
-  }
-
-  /* istanbul ignore next */
-  if (challenge.length === 0) {
-    throw new Error('Problem generating code challenge');
-  }
-
-  return challenge;
+  return 'deprecated!';
 };
 
 /**
